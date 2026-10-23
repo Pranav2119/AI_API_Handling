@@ -1,5 +1,5 @@
 import os
-
+import requests
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -16,6 +16,15 @@ client = OpenAI(
 
 System_Prompt = """You are a helpful assistant. And only answer the question that is asked. Do not provide any additional information or context.
 """
+
+# weather_api_url = f"https://wttr.in/{city}?format=%C+%t"
+
+def get_weather(city: str):
+    response = requests.get(f"https://wttr.in/{city.lower()}?format=%C+%t")
+    if response.status_code == 200:
+        return response.text.strip()
+    else:
+        return "Could not retrieve weather information."
 
 response = client.chat.completions.create(
     model="gemini-3.8-flash",
